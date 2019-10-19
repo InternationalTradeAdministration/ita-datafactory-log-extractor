@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -47,12 +48,12 @@ namespace ita.DataFactoryLogs
       filterParameters.LastUpdatedBefore = DateTime.MaxValue;
       PipelineRunsQueryResponse pipelineRuns = client.PipelineRuns.QueryByFactory(resourceGroup, datafactoryName, filterParameters);
       PipelineRun latestPipelineRun = null;
+
       foreach (var run in pipelineRuns.Value)
       {
-        if ((run.IsLatest == true) && (run.PipelineName == pipelineName))
+        if ((latestPipelineRun == null) || (run.PipelineName == pipelineName && run.IsLatest == true && run.LastUpdated > latestPipelineRun.LastUpdated))
         {
           latestPipelineRun = run;
-          break;
         }
       }
 
