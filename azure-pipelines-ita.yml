@@ -1,0 +1,37 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  appName: 'ita-datafactory-log-extractor'
+  azureServiceConnection: '<service-connection>'
+  resourceGroupName: '<resource-group>'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: Build Function App
+  inputs:
+    command: 'build'
+    publishWebProjects: true
+    zipAfterPublish: true
+    modifyOutputPath: true
+    arguments: '--configuration Release --output $(Build.BinariesDirectory)'
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+- task: AzureFunctionApp@1
+  inputs:
+    azureSubscription: $(azureServiceConnection)
+    appName: $(appName)
+    resourceGroupName: $(resourceGroupName)
+    appType: 'functionApp'
+    deployToSlotOrASE: true
+    slotName: 'production'
+    package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    deploymentMethod: 'auto'
