@@ -6,8 +6,8 @@ pool:
 
 variables:
   appName: 'ita-datafactory-log-extractor-dev'
-  azureServiceConnection: '<service-connection>'
-  resourceGroupName: '<resource-group>'
+  azureServiceConnection: 'ITAARMServiceConnection01'
+  resourceGroupName: 'ITA-MSDataServices-Dev-East1'
 
 steps:
 - task: DotNetCoreCLI@2

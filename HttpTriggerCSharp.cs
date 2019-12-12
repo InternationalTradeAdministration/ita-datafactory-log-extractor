@@ -51,7 +51,7 @@ namespace ita.DataFactoryLogs
 
       foreach (var run in pipelineRuns.Value)
       {
-        if ((latestPipelineRun == null) || (run.PipelineName == pipelineName && run.IsLatest == true && run.LastUpdated > latestPipelineRun.LastUpdated))
+        if (run.PipelineName == pipelineName && ((latestPipelineRun == null) || (run.IsLatest == true && run.LastUpdated > latestPipelineRun.LastUpdated)))
         {
           latestPipelineRun = run;
         }
