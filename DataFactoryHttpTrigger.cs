@@ -47,23 +47,23 @@ namespace ita.DataFactory
       return (ActionResult)new OkObjectResult(JsonConvert.SerializeObject(latestPipelineRun));
     }
 
-    [FunctionName("RunPipeline")]
-    public static IActionResult RunPipeline(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
-        ILogger log)
-    {
-      log.LogInformation("Triggering pipeline run.");
-      string pipelineName = req.Query["pipelineName"];
+    // [FunctionName("RunPipeline")]
+    // public static IActionResult RunPipeline(
+    //     [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
+    //     ILogger log)
+    // {
+    //   log.LogInformation("Triggering pipeline run.");
+    //   string pipelineName = req.Query["pipelineName"];
 
-      if (pipelineName == null)
-        return new BadRequestObjectResult("Please pass a pipelineName on the query string");
+    //   if (pipelineName == null)
+    //     return new BadRequestObjectResult("Please pass a pipelineName on the query string");
 
-      var client = buildClient();
+    //   var client = buildClient();
 
-      CreateRunResponse runResponse = client.Pipelines.CreateRunWithHttpMessagesAsync(
-        getResourceGroup(), getDataFactoryName(), pipelineName, null).Result.Body;
-      return (ActionResult)new OkObjectResult(JsonConvert.SerializeObject(runResponse.RunId));
-    }
+    //   CreateRunResponse runResponse = client.Pipelines.CreateRunWithHttpMessagesAsync(
+    //     getResourceGroup(), getDataFactoryName(), pipelineName, null).Result.Body;
+    //   return (ActionResult)new OkObjectResult(JsonConvert.SerializeObject(runResponse.RunId));
+    // }
   static DataFactoryManagementClient buildClient() {
       var subscriptionId = Environment.GetEnvironmentVariable("AZURE_SUBSCRIPTION_ID", EnvironmentVariableTarget.Process);
       var tenantID = Environment.GetEnvironmentVariable("AZURE_TENANT_ID", EnvironmentVariableTarget.Process);
